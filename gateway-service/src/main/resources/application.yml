@@ -1,0 +1,27 @@
+server:
+  port: 8003
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    gateway:
+      routes:
+        - id: first
+          uri: lb://first-service
+          predicates:
+            - Path= /first/**
+        - id: second
+          uri: lb://second-service
+          predicates:
+            - Path= /second/**
+          filters:
+            - AddRequestHeader= first-filter-header, first-header
+            - AddResponseHeader= first-filter-response, first-header-response
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka
